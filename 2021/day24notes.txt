@@ -1,0 +1,89 @@
+inp w    mul x 0  add x z  mod x 26 div z 1  add x 11 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 1  mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 1  add x 11 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 11 mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 1  add x 14 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 1  mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 1  add x 11 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 11 mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 26 add x -8 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 2  mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 26 add x -5 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 9  mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 1  add x 11 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 7  mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 26 add x -13eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 11 mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 1  add x 12 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 6  mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 26 add x -1 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 15 mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 1  add x 14 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 7  mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 26 add x -5 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 1  mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 26 add x -4 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 8  mul y x  add z y  
+inp w    mul x 0  add x z  mod x 26 div z 26 add x -8 eql x w  eql x 0  mul y 0  add y 25 mul y x  add y 1  mul z y  mul y 0  add y w  add y 6  mul y x  add z y  
+
+                                          ^        ^                                                                                         ^
+										  divZ     addToX                                                                                    addToW
+										  
+
+
+Solve 14th digit (output z = 0). Input z in [0, 25] && input z = digit + 8
+Solve 13th digit (output z = 9, digit = 1).
+
+
+
+
+
+output z must be [9, 17]
+for else branch: z % 26 == 5 (for digit 1) == [5, 5+26, 5-26, etc.] and z in [9*26, 18*26-1] = [234, 467]
+	= [239, 265, 291, 317, 343, 369, 395, 421, 447] 
+for main branch: a*26-8 in digit+[9,17] = [10, 26]. a = 0 has no solutions. a=1 has solutions 26-8=18 in [10,26] when digit+z=18, so (digit,z) = (1, 17), (2, 16), etc.
+
+
+long ComputeZV3(long z, int digit, bool isDivZ26, int addToW, int addToX)
+{
+	if ((z % 26 + addToX) != digit)
+	{
+		// To return in [9, 17] choose a value a such that a*26 - addToW = digit + [9, 17]
+
+		// Can't get 0 (see logic in else branch)
+		return (z / 26) * 26 + (digit + addToW);
+		// return Floor(z / 26) * 26 + (digit + addToW);
+
+
+	}
+	else
+	{
+
+		To return in [9,17] we need z in [9*26, (17+1)*26-1] and z % 26 == digit - addToX
+		return z / 26;
+		// return Floor(z / 26)
+
+
+	}
+}
+	
+	
+// For output = 0
+long ComputeZV3(long z, int digit, bool isDivZ26, int addToW, int addToX)
+{
+	if ((z % 26 + addToX) != digit)
+	{
+		if (isDivZ26)
+		{
+			// Can't get 0 (see logic in else branch)
+			return (z / 26) * 26 + (digit + addToW);
+			// return Floor(z / 26) * 26 + (digit + addToW);
+		}
+		else
+		{
+			// To get a result of 0 we need (digit + addToW) to be a multiple of 26, but ([1-9] + [1-15]) = [2,25] which is never a multiple of 26.
+			return z * 26 + (digit + addToW);
+		}
+	}
+	else
+	{
+		if (isDivZ26)
+		{
+			// To get a result of 0, we need z in [0, 25] and (z == digit - addToX) which means there will only be 0 or 1 digit matching
+			return z / 26;
+			// return Floor(z / 26)
+		}
+		else
+		{
+			// To get a result of 0, we need z=0. But plugging z=0 into the condition gives (addToX != digit) which is true for all inputs, so we can never hit this branch and return 0.
+			return z;
+		}
+	}
+}

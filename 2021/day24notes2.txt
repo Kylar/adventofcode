@@ -1,0 +1,354 @@
+
+---- w = read()
+inp w
+---- x = z % 26 + 11
+---- z = z / 1
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 11
+---- x = x == w ? 1 : 0
+---- x = x == 0 ? 1 : 0
+eql x w
+eql x 0
+---- y = (25 * x) + 1
+mul y 0
+add y 25
+mul y x
+add y 1
+---- z = z * y
+mul z y
+---- y = (w + 1) * x
+---- z += y
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 11
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 11
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 14
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 11
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 11
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -8
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 2
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -5
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 9
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 11
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 7
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -13
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 11
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 12
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 6
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -1
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 15
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 14
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 7
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -5
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -4
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 8
+mul y x
+add z y
+
+---- w = read()
+     x = z % 26 - 8
+	 x = x != w
+     z = (z / 26) * (25 * x) + 1 + (w + 6) * x
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -8
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 6
+mul y x
+add z y
+
+
+z0 must be 0
+z1 must be -(w + 6) * x
+
+
+
+// z will be zero when
+//		(x is 0
+//			or (digit + addToW) is 0
+//		AND (z is 0
+//			or divZ is 0
+//			or x = -1/25)
+
+simplified because x can't be -1/25 (integers only) and divZ can't be 0 (input has 1 and 26 only) and (digit+addtow) can't be 0 (input has values >= 4)
+
+z will be zero when
+(x is 0 AND z is 0)
+
+x will be 0 when (m2._z % 26 + addToX) == digit, and because we must propagate z=0, simplify to
+x will be 0 when z = 0 && addToX == digit, but addToX is never in the range [1, 9] so this will never happen
+
+The only other way to get 0 is to make
+LHS + RHS == 0
+m2._z / divZ * ((25 * m2._x) + 1) + ((digit + addToW) * m2._x) == 0
+((digit + addToW) * m2._x) == -(m2._z / divZ * ((25 * m2._x) + 1))
+(digit + addToW) == -(m2._z / divZ * ((25 * m2._x) + 1)) / m2._x
+digit == (-(m2._z / divZ * ((25 * m2._x) + 1)) / m2._x) - addToW
+
+1 <= (-(m2._z / divZ * ((25 * m2._x) + 1)) / m2._x) - addToW
+9 >= (-(m2._z / divZ * ((25 * m2._x) + 1)) / m2._x) - addToW
+
+
+1 <= (-(m2._z / divZ * ((25 * m2._x) + 1)) / m2._x) - addToW
+1 + addToW <= -(m2._z / divZ * ((25 * m2._x) + 1)) / m2._x
+
+if x >= 0:
+	1 + addToW * x <= -(m2._z / divZ * ((25 * m2._x) + 1))
+else:
+	1 + addToW * x >= -(m2._z / divZ * ((25 * m2._x) + 1))
+	
+
+if x >= 0:
+	-(1 + addToW * x) >= m2._z / divZ * ((25 * m2._x) + 1)
+else:
+	-(1 + addToW * x) <= m2._z / divZ * ((25 * m2._x) + 1)
+
+
+
+divZ * ((25 * x) + 1) * -(1 + addToW * x) >= z   -- (if x >= 0 flip sign, if divZ * ((25 * x) + 1) >= 0 flip sign)
+
+
+z <= divZ * ((25 * x) + 1) * -(1 + addToW * x)  -- (if x >= 0 flip sign, if divZ * ((25 * x) + 1) >= 0 flip sign)
+
+
+z <= divZ * ((25 * x) + 1) * -(1 + addToW * x)  -- (if x >= 0 flip sign, if divZ * ((25 * x) + 1) >= 0 flip sign)
+&& z >= divZ * ((25 * x) + 1) * -(9 + addToW * x)
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
